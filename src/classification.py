@@ -1,5 +1,9 @@
 import os
 import pandas as pd
+'''
+This program is classification datas for this project,
+let who want to analysis datas can more easier to unstand datas.
+'''
 
 
 def import_table(path, import_cols=None):
