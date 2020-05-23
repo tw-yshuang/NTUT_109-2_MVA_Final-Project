@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+autopep8 = "*"
+
+[packages]
+numpy = "*"
+matplotlib = "==3.1.1"
+opencv-python = "==3.4.2.17"
+opencv-contrib-python = "==3.4.2.17"
+sklearn = "*"
+tensorflow = "*"
+keras = "==2.3.1"
+pyqt5 = "*"
+view = "*"
+scikit-image = "*"
+pydot = "*"
+pandas = "*"
+numba = "*"
+librosa = "*"
+docutils = "*"
+
+[requires]
+python_version = "3.6"
