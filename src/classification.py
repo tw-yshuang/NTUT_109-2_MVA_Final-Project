@@ -1,4 +1,5 @@
 import os
+import shutil
 import pandas as pd
 '''
 This program is classification datas for this project,
@@ -22,8 +23,8 @@ if __name__ == "__main__":
     for i in range(df.shape[0]):
         img_path = df.loc[i, cols[0]]  # image_path
         try:
-            os.rename("data/train_images/{}".format(img_path),
-                      "data/train_images/{}/{}".format(df.loc[i, cols[1]], img_path))
+            shutil.copyfile("data/train_images/raw/{}".format(img_path),
+                            "data/train_images/{}/{}".format(df.loc[i, cols[1]], img_path))
         except OSError:
             try:
                 dir_path = os.path.abspath('.')
@@ -32,8 +33,8 @@ if __name__ == "__main__":
                 os.mkdir(dir_path)
                 print("create a file, path: {}".format(dir_path))
 
-                os.rename("data/train_images/{}".format(img_path),
-                          "data/train_images/{}/{}".format(df.loc[i, cols[1]], img_path))
+                shutil.copyfile("data/train_images/raw/{}".format(img_path),
+                                "data/train_images/{}/{}".format(df.loc[i, cols[1]], img_path))
             except OSError:
                 continue
     print("done!")
