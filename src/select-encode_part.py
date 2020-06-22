@@ -66,8 +66,8 @@ if __name__ == "__main__":
         crop_imgs = get_crop_imgs(img, features, 3, 1)
 
         for i in range(len(crop_imgs)):
-            save_img_path = '{}/{}/{}/{}_{}'.format(
-                imgs_path, save_file_path, folder_name, img_name, (i + 1))
+            save_img_path = '{}/{}/{}/{}_{}.jpg'.format(
+                imgs_path, save_file_path, folder_name, img_name[:-4], (i + 1))
             cv2.imwrite(save_img_path, crop_imgs[i])
 
         if num_img / 50 == num_img // 50:

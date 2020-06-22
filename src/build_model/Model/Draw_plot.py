@@ -3,7 +3,11 @@ import numpy as np
 
 
 def draw_plot(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path='out/'):
-    EPOCH_times = range(1, EPOCH+1)
+
+    name_mark = str(test_acc_ls[-1])[2:]
+
+    EPOCH_times = range(1, EPOCH + 1)
+    plt.cla()
     plt.plot(EPOCH_times, train_loss_ls, marker='o',
              markerfacecolor='white', markersize=5)
     # 设置数字标签
@@ -24,7 +28,7 @@ def draw_plot(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path='out/')
     plt.xlabel("Epoch", fontsize=10)
     # 標示y軸(labelpad代表與圖片的距離)
     plt.ylabel("Loss", fontsize=10)
-    plt.savefig("{}train_loss.png".format(save_path))
+    plt.savefig("{}/{}train_loss.png".format(save_path, name_mark))
 
     plt.cla()
     plt.plot(EPOCH_times, train_acc_ls, marker='o',
@@ -59,4 +63,4 @@ def draw_plot(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path='out/')
     plt.xlabel("Epoch", fontsize=10)
     # 標示y軸(labelpad代表與圖片的距離)
     plt.ylabel("Accuracy", fontsize=10)
-    plt.savefig("{}acc.png".format(save_path))
+    plt.savefig("{}/{}acc.png".format(save_path, name_mark))

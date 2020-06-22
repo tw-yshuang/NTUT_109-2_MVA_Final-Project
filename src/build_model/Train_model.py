@@ -45,7 +45,8 @@ def train_model(device, EPOCH, train_loader, test_datasets, model=CNN().to('cuda
             total += b_labels.size(0)
 
             # if step % 50 == 0:
-            if step == len(labels):
+            # if step == len(labels):
+            if step == 1:
                 # test_datas = torch.tensor(
                 #     test_datasets.datas, dtype=torch.float32)
                 # test_labels = torch.tensor(

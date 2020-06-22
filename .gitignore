@@ -2,3 +2,5 @@
 Data/
 .vscode/
 src/Model/__pycache__
+src/build_model/Model/__pycache__
+src/build_model/__pycache__

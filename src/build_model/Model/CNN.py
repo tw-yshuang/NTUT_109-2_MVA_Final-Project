@@ -25,7 +25,7 @@ class CNN(nn.Module):
         #     nn.ReLU(),
         #     nn.MaxPool2d(kernel_size=(2, 2)))
 
-        self.ln1 = nn.Linear(88704, 256)
+        self.ln1 = nn.Linear(36992, 256)
         self.out = nn.Linear(256, 3)
 
     def forward(self, x):

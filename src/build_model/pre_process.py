@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import random
-from Model.Img_DIP import *
+from Model.Img_DIP import ImgDIP
 
 
 def change_HSV_V(img, v_value=0):
@@ -58,13 +58,13 @@ def dip_pre_process(img, num_create=1):
 
         # imgs = try_append(imgs, output_img)
 
-    for hsv_v_value in hsv_v_values:
-        hsv_img = change_HSV_V(img, v_value=hsv_v_value)
-        output_img = get_reshape_img(hsv_img)
-        imgs = try_append(imgs, output_img)
+    # for hsv_v_value in hsv_v_values:
+    #     hsv_img = change_HSV_V(img, v_value=hsv_v_value)
+    #     output_img = get_reshape_img(hsv_img)
+    #     imgs = try_append(imgs, output_img)
 
     for rotate_value in rotate_values:
-        rotate_img = rotate(hsv_img, angle=rotate_value)
+        rotate_img = rotate(img, angle=rotate_value)
         output_img = get_reshape_img(rotate_img)
         imgs = try_append(imgs, output_img)
 

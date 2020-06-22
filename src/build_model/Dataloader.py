@@ -1,24 +1,27 @@
 import cv2
 import random
 import torch
-from find_file_name import *
+from find_file_name import get_filenames
 from torch.utils.data import Dataset, DataLoader
 from pre_process import dip_pre_process
 
 
 class ImgDataset(Dataset):
 
-    def __init__(self, path, isTrain=False):
+    def __init__(self, path, num_classifer, isTrain=False):
         file_extension = "jpg"
         filenames = get_filenames(path, file_extension)
-        random.shuffle(filenames)  # random sort files
+        random.shuffle(filenames)
 
-        img_h = 128  # img resize hight
-        img_w = 82  # img resize width
+        img_h = 64  # img resize hight
+        img_w = 64  # img resize width
 
         (datas, labels) = organize_dataset(
-            filenames, img_h, img_w, isTrain=isTrain, isOneHotEncod=False)
-        print("total_train-datasets: ", labels.shape[0])
+            filenames, img_h, img_w, num_classifer, isTrain=isTrain, isOneHotEncod=False)
+        if isTrain:
+            print("total_train-datasets: ", labels.shape[0])
+        else:
+            print("total_test-datasets: ", labels.shape[0])
 
         self.datas = datas
         self.labels = labels
@@ -31,17 +34,22 @@ class ImgDataset(Dataset):
 
 
 # classifer for labels
-def classifer_labels(filenames):
+def classifer_labels(filenames, num_classifer):
     labels = []
     for filename in filenames:
-        label = filename.split('/')[2]
+        label = filename.split('/')[3]  # which folder is classifer
         labels.append(label)
     labels = list(set(labels))
     # print(labels)
 
     labels_dict = {}
     for i in range(len(labels)):
-        label_dict = {labels[i]: i}
+        # in binary case, only need to check label is same with num_classifer, if yes=1, no=0
+        if labels[i] == num_classifer:
+            label_v = 1
+        else:
+            label_v = 0
+        label_dict = {labels[i]: label_v}
         labels_dict.update(label_dict)
     print(labels_dict)
 
@@ -61,11 +69,11 @@ def get_one_hot_encoding(labels_v, NUM_CLASS):
 
 
 # organising datas & labels
-def organize_dataset(filenames, img_h, img_w, isTrain=False, isOneHotEncod=False):
+def organize_dataset(filenames, img_h, img_w, num_classifer, isTrain=False, isOneHotEncod=False):
     imgs = torch.tensor([], dtype=torch.uint8)
     # # labels = torch.tensor([], dtype=torch.int8)
     labels_v = []
-    labels_dict = classifer_labels(filenames)
+    labels_dict = classifer_labels(filenames, num_classifer)
     for filename in filenames:
         # data part: reshape -> reshape -> turn to tensor
         raw_img = cv2.imread(filename)
@@ -74,8 +82,12 @@ def organize_dataset(filenames, img_h, img_w, isTrain=False, isOneHotEncod=False
         # cv2.waitKey(0)
 
         if isTrain is True:
-            # use raw-img increase img by dip
-            pre_imgs = dip_pre_process(raw_img, num_create=50)
+            # use raw-img increase img by dip <<<Import_Part>>>
+            pre_imgs = torch.tensor([], dtype=torch.uint8)
+            if num_classifer == filename.split('/')[3]:
+                pre_imgs = dip_pre_process(raw_img, num_create=10)
+            else:
+                pre_imgs = dip_pre_process(raw_img, num_create=1)
             # # print(type(img))
             for img in pre_imgs:
                 img = torch.from_numpy(img)
@@ -99,7 +111,7 @@ def organize_dataset(filenames, img_h, img_w, isTrain=False, isOneHotEncod=False
                 imgs = img
 
         # label part: get classifer name
-        label = filename.split('/')[2]
+        label = filename.split('/')[3]
         if isTrain is True:
             for i in range(pre_imgs.shape[0]):
                 label_v = labels_dict.get(label)
