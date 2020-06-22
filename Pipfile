@@ -11,9 +11,6 @@ numpy = "*"
 matplotlib = "==3.1.1"
 opencv-python = "==3.4.2.17"
 opencv-contrib-python = "==3.4.2.17"
-tensorflow = "*"
-scikit-image = "*"
-pydot = "*"
 pandas = "*"
 
 
