@@ -72,10 +72,41 @@ def draw_bbox(img, feature_list, color=(0, 255, 0), width=2, isShow=True):
         (x, y, w, h) = f[3]
         img_bbox = cv2.rectangle(
             img_bbox, (x, y), (x + w, y + h), color, width)  # -1 filled
-        if isShow:
-            cv2.imshow("image with bbox", img_bbox)
-            cv2.waitKey(0)
+
+    if isShow:
+        cv2.imshow("image with bbox", img_bbox)
+        cv2.waitKey(0)
     return img_bbox
+
+
+def get_crop_imgs(img, feature_list, extra_W=0, extra_H=0, isShow=False):
+    crop_imgs = []
+    for f in feature_list:
+        (x, y, w, h) = f[3]
+        x -= extra_W
+        y -= extra_H
+        w += extra_W*2
+        h += extra_H*2
+
+        new_position = [x, y]
+        for i in range(len(new_position)):
+            if new_position[i] < 0:
+                new_position[i] = 0
+        [x, y] = new_position
+
+        if x + w > img.shape[1]:
+            w = img.shape[1] - x
+        if y + h > img.shape[0]:
+            h = img.shape[0] - y
+
+        crop_img = img[y: y + h, x: x + w]
+        crop_imgs.append(crop_img)
+
+        if isShow:
+            cv2.imshow("crop_img_bbox", crop_img)
+            cv2.waitKey(0)
+
+    return crop_imgs
 
 
 def draw_bbox2(img, feature_list, color=(0, 255, 0), width=2, isShow=True):

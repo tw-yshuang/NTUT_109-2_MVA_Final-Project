@@ -1,2 +1,4 @@
 # Folder
 Data/
+.vscode/
+src/Model/__pycache__

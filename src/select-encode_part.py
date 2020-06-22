@@ -1,10 +1,10 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import sys
 import os
-from Model.BoundaryDescriptor import get_contours_binary, calc_contour_feature, draw_bbox
+from Model.BoundaryDescriptor import get_contours_binary, calc_contour_feature, get_crop_imgs
 
 
 def get_mask(img, en_pix):
@@ -42,12 +42,13 @@ def get_mask(img, en_pix):
 if __name__ == "__main__":
     df = pd.read_csv('doc/train.csv')
 
-    imgs_path = 'Data/train_images/'
+    imgs_path = 'Data/train_images'
+    save_file_path = 'select-encode_part'
 
-    for num_img in range(df.shape[0]):
+    for num_img in range(df.shape[0]-1000):
         img_name = df.iloc[num_img, 0]
         folder_name = df.iloc[num_img, 1]
-        img_path = '{}{}/{}'.format(imgs_path, folder_name, img_name)
+        img_path = '{}/{}/{}'.format(imgs_path, folder_name, img_name)
         en_pix = df.iloc[num_img, 2]
 
         img = cv2.imread(img_path)
@@ -57,20 +58,17 @@ if __name__ == "__main__":
         mask = mask.astype('uint8')
 
         contours = get_contours_binary(mask)
-        # img_contours = cv2.drawContours(
-        #     img.copy(), contours, -1, (255, 0, 0), 2)
 
-        # cv2.imshow("mask", mask)
-        # cv2.waitKey(0)
-        # plt.imshow(mask)
-        # plt.show()
+        # get features of contours and img
+        features = calc_contour_feature(img, contours)
 
-        features = calc_contour_feature(img, contours, isShow=False)
-        
-        # 截圖？？？？
-        img_bbox = draw_bbox(img, features, color=(
-            0, 0, 255), width=1, isShow=True)
+        # get crop imgs, there are several imgs in the crop_imgs, crop_imgs type is list
+        crop_imgs = get_crop_imgs(img, features, 3, 1)
+
+        for i in range(len(crop_imgs)):
+            save_img_path = '{}/{}/{}/{}_{}'.format(
+                imgs_path, save_file_path, folder_name, img_name, (i + 1))
+            cv2.imwrite(save_img_path, crop_imgs[i])
 
         if num_img / 50 == num_img // 50:
             print(num_img)
-        # plt.show()
