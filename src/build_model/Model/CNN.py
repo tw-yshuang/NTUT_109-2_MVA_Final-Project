@@ -26,13 +26,15 @@ class CNN(nn.Module):
         #     nn.MaxPool2d(kernel_size=(2, 2)))
 
         self.ln1 = nn.Linear(36992, 256)
-        self.out = nn.Linear(256, 3)
+        self.out = nn.Linear(256, 2)
 
     def forward(self, x):
+
         x = self.conv1(x)
         x = self.conv2(x)
         # x = self.conv3(x)
         x = x.view(x.size(0), -1)
+
         x = self.ln1(x)
         x = self.out(x)
         # output = F.
