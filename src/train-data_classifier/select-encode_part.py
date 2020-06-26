@@ -60,15 +60,28 @@ if __name__ == "__main__":
         contours = get_contours_binary(mask)
 
         # get features of contours and img
-        features = calc_contour_feature(img, contours)
+        raw_features = calc_contour_feature(img, contours)
+
+        # Beacuse there are some shape of encod_pixel is too small (e.g. img's size: 16*1 ),
+        # let final-projectp's model effieient get lower, so we need to remove those encod_pixel.
+        features = []
+        for raw_feature in raw_features:
+            (x, y, w, h) = raw_feature[3]
+            if w > 5 and h > 5:
+                features.append(raw_feature)
 
         # get crop imgs, there are several imgs in the crop_imgs, crop_imgs type is list
-        crop_imgs = get_crop_imgs(img, features, 3, 1)
+        crop_imgs = get_crop_imgs(img, features, 3, 3)
 
         for i in range(len(crop_imgs)):
-            save_img_path = '{}/{}/{}/{}_{}.jpg'.format(
-                imgs_path, save_file_path, folder_name, img_name[:-4], (i + 1))
+            folder_path = '{}/{}/{}'.format(imgs_path,
+                                            save_file_path, folder_name)
+            save_img_path = '{}/{}_{}.jpg'.format(
+                folder_path, img_name[:-4], (i + 1))
+
+            if os.path.exists(folder_path) is False:
+                os.makedirs(folder_path)
             cv2.imwrite(save_img_path, crop_imgs[i])
 
-        if num_img / 50 == num_img // 50:
+        if num_img % 50 == 0:
             print(num_img)

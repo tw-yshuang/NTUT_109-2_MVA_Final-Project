@@ -1,15 +1,14 @@
 import cv2
 import torch
-from find_file_name import get_filenames
+from Model.find_file_name import get_filenames
 from torch.utils.data import Dataset, DataLoader
 from pre_process import dip_pre_process
 
 
 class ImgDataset(Dataset):
 
-    def __init__(self, filenames, classifier, isTrain=False, isOneHotEncod=False, dataAutoBalance=True, rateMagnifyData=1.0):
-        img_h = 64  # img resize hight
-        img_w = 64  # img resize width
+    def __init__(self, filenames, classifier, imgResize=(64, 64), isTrain=False, isOneHotEncod=False, dataAutoBalance=True, rateMagnifyData=1.0):
+        (img_h, img_w) = imgResize  # img resize width
 
         (datas, labels) = organize_dataset(
             filenames, img_h, img_w, classifier, isTrain, isOneHotEncod, dataAutoBalance, rateMagnifyData)

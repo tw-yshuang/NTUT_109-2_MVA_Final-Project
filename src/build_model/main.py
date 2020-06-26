@@ -5,11 +5,13 @@ import pandas as pd
 import torch
 import torch.utils.data as Data
 import torch.nn as nn
-from find_file_name import get_filenames
+from Model.find_file_name import get_filenames
 from Dataloader import ImgDataset
 from Train_model import train_model
 from Model.Model_Perform_Tool import save_history_csv, draw_plot
 from Model.CNN import CNN
+
+# input data 有問題？？
 
 
 def get_device():
@@ -29,14 +31,21 @@ def calc_dataset_size(train_path, test_path):
 
 
 def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
+    imgResize = (64, 64)  # img resize shape: (h, w)
     train_datasets = ImgDataset(
-        train_filenames, classifier=str(classifier), isTrain=True, rateMagnifyData=3.0)
+        train_filenames, classifier=str(classifier), imgResize=imgResize, isTrain=True, rateMagnifyData=1.0)
     test_datasets = ImgDataset(
-        test_filenames, classifier=str(classifier), dataAutoBalance=False)
+        test_filenames, classifier=str(classifier), imgResize=imgResize, dataAutoBalance=False)
 
     train_loader = Data.DataLoader(
         dataset=train_datasets,
-        batch_size=64,  # <<<setting batch_size>>>
+        batch_size=32,  # <<<setting batch_size>>>
+        shuffle=True,
+        num_workers=0
+    )
+    test_loader = Data.DataLoader(
+        dataset=test_datasets,
+        batch_size=16,  # <<<setting batch_size>>>
         shuffle=True,
         num_workers=0
     )
@@ -45,8 +54,8 @@ def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     loss_func = nn.CrossEntropyLoss()
 
-    history = train_model(device_0, EPOCH,
-                          train_loader, test_datasets, model=model)
+    history = train_model(device_0, EPOCH, train_loader,
+                          test_loader, model, loss_func, optimizer)
     try:
         torch.save(model.state_dict(),
                    'out/class_{}/cnn-model.pkl'.format(classifier))
@@ -66,7 +75,7 @@ if __name__ == "__main__":
         test_path = "Data/test_images/select-encode_part"
 
         # <<<setting train_size>>>
-        num_train_size = 1000
+        num_train_size = 2000
         total_train_filenames, total_test_filenames, datasets_size = calc_dataset_size(
             train_path, test_path)
 
@@ -92,7 +101,7 @@ if __name__ == "__main__":
             train_filenames = total_train_filenames[bound_L: bound_H]
 
             history = train_model_1time_flow(
-                train_filenames, total_test_filenames[:1000], model, EPOCH=30)
+                train_filenames, total_test_filenames, model, EPOCH=10)
             (train_loss_ls, train_acc_ls, test_acc_ls) = history
 
             total_train_loss_ls.extend(train_loss_ls)
