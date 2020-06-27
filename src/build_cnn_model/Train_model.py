@@ -2,10 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from Model.CNN import CNN
+from Model.CNN_1 import CNN
 
 
-def test_performance(model, device, test_loader, loss, pred_train_labels, b_labels, printHistory=True):
+def test_performance(model, device, test_loader, loss, pred_train_labels, train_labels, printHistory=True):
     test_num_right = 0
     for step, (datas, labels) in enumerate(test_loader):
         b_test_datas = datas.clone().detach().type(torch.float32)
@@ -15,15 +15,16 @@ def test_performance(model, device, test_loader, loss, pred_train_labels, b_labe
         b_test_labels = Variable(b_test_labels)
 
         b_test_output = model(b_test_datas)
-        pred_test_labels = torch.max(b_test_output, 1)[1].data.squeeze().cpu()
+        pred_test_labels = torch.argmax(
+            b_test_output, dim=1).detach().cpu()
 
         # pred_test_labels = F.log_softmax(test_output, dim=1)
         b_test_num_right = int(sum(pred_test_labels == b_test_labels))
         test_num_right += b_test_num_right
 
     # train_acc
-    train_num_right = int(sum(pred_train_labels == b_labels))
-    train_acc = train_num_right / b_labels.size(0)
+    train_num_right = int(sum(pred_train_labels == train_labels))
+    train_acc = train_num_right / train_labels.size(0)
 
     # test_acc
     test_acc = test_num_right / len(test_loader.dataset.labels)
@@ -40,27 +41,36 @@ def train_model(device, EPOCH, train_loader, test_loader, model, loss_func, opti
     train_loss_ls = []
     train_acc_ls = []
     test_acc_ls = []
+    pred_train_labels = torch.tensor([], dtype=torch.int64).cpu()
+    train_labels = torch.tensor([], dtype=torch.int64).cpu()
+
     for epoch in range(1, EPOCH+1):
         # print("EPOCH: ", epoch)
 
-        total = 0
+        # total = 0
         train_acc = 0
-        for step, (datas, labels) in enumerate(train_loader):
-            b_datas = datas.clone().detach().type(torch.float32)
-            b_labels = labels.clone().detach().type(torch.int64)
+        for step, (b_datas, b_labels) in enumerate(train_loader):
+            b_datas = b_datas.clone().detach().type(torch.float32)
+            b_labels = b_labels.clone().detach().type(torch.int64)
             b_datas = Variable(b_datas).to(device)
             b_labels = Variable(b_labels).to(device)
 
-            output = model.forward(b_datas)
+            output = model(b_datas)
             loss = loss_func(output, b_labels)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            pred_train_labels = torch.max(output, 1)[1].data.squeeze().cpu()
+            pred_b_train_labels = torch.argmax(
+                output, dim=1).detach().cpu()
+
+            pred_train_labels = torch.cat(
+                (pred_train_labels, pred_b_train_labels), dim=0)
+            train_labels = torch.cat((train_labels, b_labels.cpu()), dim=0)
+
             # pred_train_labels = F.log_softmax(output, dim=1)
 
-            total += b_labels.size(0)
+            # total += b_labels.size(0)
 
             # if step % 10 == 0:
             #     train_acc, test_acc = test_performance(model, loss, test_datas,
@@ -71,7 +81,7 @@ def train_model(device, EPOCH, train_loader, test_loader, model, loss_func, opti
             #             step, train_acc, loss, test_acc))
 
         train_acc, test_acc = test_performance(model, device, test_loader, loss.cpu(),
-                                               pred_train_labels, b_labels.cpu(), printHistory=False)
+                                               pred_train_labels, train_labels, printHistory=False)
 
         if printHistory is True:
             print('EPOCH: {} | train_acc: {:5f} | train_loss: {:5f} | test_acc: {:5f}'.format(

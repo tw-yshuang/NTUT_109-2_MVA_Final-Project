@@ -10,38 +10,38 @@ class CNN(nn.Module):
         # self.nn = nn
 
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=512,
-                      kernel_size=(7, 7), stride=1, padding=2),
+            nn.Conv2d(in_channels=3, out_channels=256,
+                      kernel_size=(5, 5), stride=1, padding=2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(2, 2)))
 
         self.conv2 = nn.Sequential(
-            nn.Conv2d(512, 4096, (5, 5), 1, 2),
+            nn.Conv2d(256, 512, (3, 3), 1, 2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(2, 2)))
 
         self.conv3 = nn.Sequential(
-            nn.Conv2d(4096, 1024, (3, 3), 1, 2),
+            nn.Conv2d(512, 256, (3, 3), 1, 2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(2, 2)))
 
-        self.ln1 = nn.Linear(65536, 4096)
-        self.ln2 = nn.Linear(4096, 512)
+        self.ln1 = nn.Linear(20736, 512)
+        # self.ln2 = nn.Linear(4096, 512)
         self.ln3 = nn.Linear(512, 64)
-        self.out = nn.Linear(64, 2)
+        self.ln4 = nn.Linear(64, 2)
+        # self.out = nn.Softmax(dim=1)
 
     def forward(self, x):
-
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
         x = x.view(x.size(0), -1)
 
         x = self.ln1(x)
-        x = self.ln2(x)
+        # x = self.ln2(x)
         x = self.ln3(x)
-        x = self.out(x)
-        # output = F.
+        x = self.ln4(x)
+        # x = self.out(x)
         output = x
 
         return output

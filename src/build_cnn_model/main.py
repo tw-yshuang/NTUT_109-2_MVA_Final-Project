@@ -9,7 +9,7 @@ from Model.find_file_name import get_filenames
 from Dataloader import ImgDataset
 from Train_model import train_model
 from Model.Model_Perform_Tool import save_history_csv, draw_plot
-from Model.CNN import CNN
+from Model.CNN_3 import CNN
 
 # input data 有問題？？
 
@@ -33,20 +33,21 @@ def calc_dataset_size(train_path, test_path):
 def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
     imgResize = (64, 64)  # img resize shape: (h, w)
     train_datasets = ImgDataset(
-        train_filenames, classifier=str(classifier), imgResize=imgResize, isTrain=True, rateMagnifyData=1.0)
+        train_filenames, classifier=str(classifier), imgResize=imgResize, isTrain=True, rateMagnifyData=3.0)
     test_datasets = ImgDataset(
         test_filenames, classifier=str(classifier), imgResize=imgResize, dataAutoBalance=False)
 
     train_loader = Data.DataLoader(
         dataset=train_datasets,
-        batch_size=32,  # <<<setting batch_size>>>
+        batch_size=2048,  # <<<setting batch_size>>>
         shuffle=True,
         num_workers=0
     )
     test_loader = Data.DataLoader(
         dataset=test_datasets,
-        batch_size=16,  # <<<setting batch_size>>>
+        batch_size=512,  # <<<setting batch_size>>>
         shuffle=True,
+
         num_workers=0
     )
 
@@ -70,14 +71,15 @@ def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
 if __name__ == "__main__":
     device_0 = get_device()
 
-    for classifier in range(1, 5):
+    for classifier in range(3, 4):
         train_path = "Data/train_images/select-encode_part"
         test_path = "Data/test_images/select-encode_part"
 
-        # <<<setting train_size>>>
-        num_train_size = 2000
         total_train_filenames, total_test_filenames, datasets_size = calc_dataset_size(
             train_path, test_path)
+
+        # <<<setting train_size>>>
+        num_train_size = datasets_size
 
         train_times = math.ceil(datasets_size / num_train_size)
 
@@ -101,7 +103,7 @@ if __name__ == "__main__":
             train_filenames = total_train_filenames[bound_L: bound_H]
 
             history = train_model_1time_flow(
-                train_filenames, total_test_filenames, model, EPOCH=10)
+                train_filenames, total_test_filenames, model, EPOCH=300)
             (train_loss_ls, train_acc_ls, test_acc_ls) = history
 
             total_train_loss_ls.extend(train_loss_ls)

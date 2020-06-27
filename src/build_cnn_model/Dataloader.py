@@ -108,25 +108,19 @@ def organize_dataset(filenames, img_h, img_w, classifier, isTrain=False, isOneHo
         # cv2.imshow('img', img)
         # cv2.waitKey(0)
 
-        pre_imgs = torch.tensor([], dtype=torch.uint8)
+        # pre_imgs = torch.tensor([], dtype=torch.uint8)
         if dataAutoBalance is True:
+            # let dataset be balance
             # use raw-img increase img by dip <<<Important_Part>>>
-            if incrace_ratio > 1:
-                num_increase = round(incrace_ratio * rateMagnifyData) - \
-                    1  # let dataset be balance
-                if classifier == raw_labels[i]:
-                    pre_imgs = dip_pre_process(
-                        raw_img, num_create=num_increase)
-                else:
-                    pre_imgs = dip_pre_process(raw_img, num_create=0)
+            if classifier == raw_labels[i] and incrace_ratio > 1:
+                num_increase = round(incrace_ratio * rateMagnifyData) - 1
+            elif classifier != raw_labels[i] and incrace_ratio < 1:
+                num_increase = round((1 / incrace_ratio) * rateMagnifyData) - 1
             else:
-                num_increase = round(1 / (incrace_ratio * rateMagnifyData)) - \
-                    1
-                pre_imgs = dip_pre_process(raw_img, num_create=num_increase)
-
+                num_increase = round(rateMagnifyData) - 1
         else:
             num_increase = round(rateMagnifyData) - 1
-            pre_imgs = dip_pre_process(raw_img, num_create=num_increase)
+        pre_imgs = dip_pre_process(raw_img, num_create=num_increase)
 
         for img in pre_imgs:
             img = torch.from_numpy(img)

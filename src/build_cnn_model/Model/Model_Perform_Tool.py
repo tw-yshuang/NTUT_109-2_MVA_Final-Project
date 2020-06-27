@@ -5,7 +5,7 @@ import pandas as pd
 
 def save_history_csv(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path='out/'):
     # <<<set the name that won't let program auto cover it~~>>>
-    name_mark = str(test_acc_ls[-1])[2:]
+    name_mark = str(test_acc_ls[-1])[2:5]
     col_names = ["EPOCH", "train_acc", "train_loss", "test_acc"]
     col_datas = [EPOCH, train_acc_ls, train_loss_ls, test_acc_ls]
     cols_dict = {}
@@ -22,7 +22,7 @@ def save_history_csv(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path=
 
 def draw_plot(EPOCH, train_loss_ls, train_acc_ls, test_acc_ls, save_path='out/'):
     # <<<set the name that won't let program auto cover it~~>>>
-    name_mark = str(test_acc_ls[-1])[2:]
+    name_mark = str(test_acc_ls[-1])[2:5]
 
     EPOCH_times = range(1, EPOCH + 1)
     plt.cla()
