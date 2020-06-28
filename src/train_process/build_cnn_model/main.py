@@ -103,7 +103,7 @@ if __name__ == "__main__":
             train_filenames = total_train_filenames[bound_L: bound_H]
 
             history = train_model_1time_flow(
-                train_filenames, total_test_filenames, model, EPOCH=300)
+                train_filenames, total_test_filenames, model, EPOCH=92)
             (train_loss_ls, train_acc_ls, test_acc_ls) = history
 
             total_train_loss_ls.extend(train_loss_ls)
