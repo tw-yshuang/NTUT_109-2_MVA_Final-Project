@@ -8,17 +8,29 @@
    from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ,split 5 class(4 defect ＆ 1 ok) imgs in to 5 different folder, let datasets get more easlier to unstand.
 
 2. Select-encodepart  
-   from \*`doc/train.csv`\_'s columns `ImageID` & `ClassID` ＆ `EncodedPixels`, use `EncodedPixels`'s information to turn encod_pixel into the img, and find correpond img use dip way to get bbox_imgs and save it, be our train_datasets.
+   from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ＆ `EncodedPixels`, use `EncodedPixels`'s information to turn encod_pixel into the img, and find correpond img use dip way to get bbox_imgs and save it, be our train_datasets.
 
 ## 2. Build & Train CNN_model
 
 1.  Buid `Dataloader.py`  
     build a function call : "`organize_dataset`",
 
-    > `API`: `organize_dataset`
+    > API : `organize_dataset`
     >
-    > > input: path  
-    > > output: datas, set
+    > > input:
+    > >
+    > > > filenames,  
+    > > > img_h, img_w,  
+    > > > classifier,  
+    > > > isTrain=False,  
+    > > > isOneHotEncod=False,  
+    > > > dataAutoBalance=True,  
+    > > > rateMagnifyData=1.0
+    > >
+    > > output:
+    > >
+    > > > datas,  
+    > > > labels
 
     it can auto scan and import imgs from the path you input, and organize datas (e.g. rateMagnifyData, autoBalance, pre_process...), labels (label is from the folder name under the path)
 
