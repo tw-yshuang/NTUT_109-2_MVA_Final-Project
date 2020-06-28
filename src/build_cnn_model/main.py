@@ -33,7 +33,7 @@ def calc_dataset_size(train_path, test_path):
 def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
     imgResize = (64, 64)  # img resize shape: (h, w)
     train_datasets = ImgDataset(
-        train_filenames, classifier=str(classifier), imgResize=imgResize, isTrain=True, rateMagnifyData=3.0)
+        train_filenames, classifier=str(classifier), imgResize=imgResize, isTrain=True, rateMagnifyData=2.0)
     test_datasets = ImgDataset(
         test_filenames, classifier=str(classifier), imgResize=imgResize, dataAutoBalance=False)
 
@@ -90,10 +90,10 @@ if __name__ == "__main__":
         for train_time in range(train_times):
             torch.cuda.empty_cache()
             model = CNN().to(device_0)
-            if train_time != 0:
-                model.load_state_dict(torch.load(
-                    'out/class_{}/cnn-model.pkl'.format(classifier)))
-                model.eval()
+            # if train_time != 0:
+            model.load_state_dict(torch.load(
+                'out/class_{}/cnn-model.pkl'.format(classifier)))
+            model.eval()
 
             bound_L = num_train_size * train_time
             bound_H = num_train_size * (train_time + 1)

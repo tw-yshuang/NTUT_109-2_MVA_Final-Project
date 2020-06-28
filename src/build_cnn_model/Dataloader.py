@@ -81,9 +81,8 @@ def get_reshape_imgs(imgs):
 
     return reshape_imgs
 
+
 # organising datas & labels
-
-
 def organize_dataset(filenames, img_h, img_w, classifier, isTrain=False, isOneHotEncod=False, dataAutoBalance=True, rateMagnifyData=1.0):
     imgs = torch.tensor([], dtype=torch.uint8)
     # # labels = torch.tensor([], dtype=torch.int8)
