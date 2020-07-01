@@ -10,9 +10,9 @@ def test_performance(model, device, test_loader, loss, pred_train_labels, train_
     for step, (datas, labels) in enumerate(test_loader):
         b_test_datas = datas.clone().detach().type(torch.float32)
         b_test_labels = labels.clone().detach().type(torch.int64)
-        b_test_datas = Variable(b_test_datas).to(device)
+        b_test_datas = Variable(b_test_datas, requires_grad=False).to(device)
         # b_test_labels don't need to calculate loss
-        b_test_labels = Variable(b_test_labels)
+        b_test_labels = Variable(b_test_labels, requires_grad=False)
 
         b_test_output = model(b_test_datas)
         pred_test_labels = torch.argmax(

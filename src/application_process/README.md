@@ -13,14 +13,14 @@
 > > input: raw_img  
 > > output: hog_imgs
 
-> ideal is use hog to find the encod part, but now, our **SVM** model is even not already to train yet, so there come up **_Plan_A_** and **_Plan_B_** :
+> idel is using hog to find the encode part, but now, our **SVM** model is even not train yet, so there come up **_Plan_A_** and **_Plan_B_** :
 
-- **_Plan_A_** : for ideal
+- **_Plan_A_** : for idel
 
-  > use hog to find the encod part
+  > use hog to find the encode part
 
 - **_Plan_B_** : for now
-  > because this final project is decided to use less 1000 imgs from _`train.csv`_ to become our application process test, and all of test_part have encod_pixel information, so for now, we use select-encode_part (from file: train-data_classifier) to pretend our hog dectection temporary.
+  > because this final project is decided to use less 1000 imgs from _`train.csv`_ to become our application process test, and all of test_part have encode_pixel information, so for now, we use select-encode_part (from file: train-data_classifier) to pretend our hog dectection temporary.
 
 ## 3. resize every hog_img
 

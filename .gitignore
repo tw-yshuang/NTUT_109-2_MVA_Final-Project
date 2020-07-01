@@ -5,3 +5,5 @@ out/
 src/train_process/build_cnn_model/Model/__pycache__
 src/train_process/build_cnn_model/__pycache__
 src/train_process/train-data_classifier/Model/__pycache__
+src/application_process/Model/__pycache__
+src/application_process/__pycache__

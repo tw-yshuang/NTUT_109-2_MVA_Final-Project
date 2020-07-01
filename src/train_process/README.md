@@ -5,10 +5,10 @@
 ## 1. Train-data_classifer
 
 1. Split train-data  
-   from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ,split 5 class(4 defect ＆ 1 ok) imgs in to 5 different folders, let datasets get more easlier to unstand.
+   from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ,split 5 class(4 defect ＆ 1 ok) imgs in to 5 different folders, let datasets get more easlier to understand.
 
 2. Select-encodepart  
-   from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ＆ `EncodedPixels`, use `EncodedPixels`'s information to turn encod_pixel into the img, and find correpond img use dip way to get bbox_imgs and save it, be our train_datasets.
+   from _`doc/train.csv`_'s columns `ImageID` & `ClassID` ＆ `EncodedPixels`, use `EncodedPixels`'s information to turn encode_pixel into the img, and find correpond img use dip way to get bbox_imgs and save it, be our train_datasets.
 
 ## 2. Build & Train CNN_model
 
@@ -22,7 +22,7 @@
     > > > filenames,  
     > > > img_h, img_w,  
     > > > classifier,  
-    > > > isTrain=False,  
+    > > > isTrain=False, unstand
     > > > isOneHotEncod=False,  
     > > > dataAutoBalance=True,  
     > > > rateMagnifyData=1.0

@@ -71,7 +71,7 @@ def train_model_1time_flow(train_filenames, test_filenames, model, EPOCH=30):
 if __name__ == "__main__":
     device_0 = get_device()
 
-    for classifier in range(3, 4):
+    for classifier in range(1, 5):
         train_path = "Data/train_images/select-encode_part"
         test_path = "Data/test_images/select-encode_part"
 
@@ -90,10 +90,10 @@ if __name__ == "__main__":
         for train_time in range(train_times):
             torch.cuda.empty_cache()
             model = CNN().to(device_0)
-            # if train_time != 0:
-            model.load_state_dict(torch.load(
-                'out/class_{}/cnn-model.pkl'.format(classifier)))
-            model.eval()
+            if train_time != 0:
+                model.load_state_dict(torch.load(
+                    'out/class_{}/cnn-model.pkl'.format(classifier)))
+                model.eval()
 
             bound_L = num_train_size * train_time
             bound_H = num_train_size * (train_time + 1)
@@ -103,7 +103,7 @@ if __name__ == "__main__":
             train_filenames = total_train_filenames[bound_L: bound_H]
 
             history = train_model_1time_flow(
-                train_filenames, total_test_filenames, model, EPOCH=92)
+                train_filenames, total_test_filenames, model, EPOCH=120)
             (train_loss_ls, train_acc_ls, test_acc_ls) = history
 
             total_train_loss_ls.extend(train_loss_ls)

@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 import torch
 from Model.find_file_name import get_filenames
 from torch.utils.data import Dataset, DataLoader
@@ -86,7 +87,7 @@ def get_reshape_imgs(imgs):
 def organize_dataset(filenames, img_h, img_w, classifier, isTrain=False, isOneHotEncod=False, dataAutoBalance=True, rateMagnifyData=1.0):
     imgs = torch.tensor([], dtype=torch.uint8)
     # # labels = torch.tensor([], dtype=torch.int8)
-    labels_v = []
+    labels_v = torch.tensor([], dtype=torch.uint8)
     raw_labels, labels_count_dict, labels_dict = classifier_labels(
         filenames, classifier)
 
@@ -130,19 +131,23 @@ def organize_dataset(filenames, img_h, img_w, classifier, isTrain=False, isOneHo
                 imgs = torch.cat((imgs, img), 0)
             except ValueError:
                 imgs = img
+        # 合併的資料量一大速度就低落，待解決！！
 
         # label part: get classifier name
         label = raw_labels[i]
 
         for j in range(pre_imgs.shape[0]):
-            label_v = labels_dict.get(label)
-            labels_v.append(label_v)
+            label_v = torch.tensor([labels_dict.get(label)], dtype=torch.uint8)
+            labels_v = torch.cat((labels_v, label_v), 0)
+            if labels_v.shape[0] % 1000 == 0:
+                print(
+                    "Nunmber of already pre-process datasets: {}".format(len(labels_v)))
 
     if isOneHotEncod is True:
         NUM_CLASS = len(labels_dict)  # get number of class to one-hot-encoding
         labels = get_one_hot_encoding(labels_v, NUM_CLASS)
     else:
-        labels = torch.Tensor(labels_v).type(torch.int64)
+        labels = labels_v.to(torch.int64)
 
     return (imgs, labels)
 
