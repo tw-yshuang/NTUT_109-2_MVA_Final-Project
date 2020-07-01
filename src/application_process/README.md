@@ -8,7 +8,7 @@
 
 ## 2. hog dectection raw_imgs
 
-> `API`
+> `Function`
 >
 > > input: raw_img  
 > > output: hog_imgs
