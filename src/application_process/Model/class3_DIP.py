@@ -18,7 +18,8 @@ def get_contours(img, isShow=True):
     ret, thresh = cv2.threshold(imgray, 92, 255, 0)
     num_white_extreme = len(np.where(imgray > 200)[0])
     num_black_extreme = len(np.where(imgray < 25)[0])
-    if np.mean(imgray) < 127 or num_white_extreme < 50:
+
+    if np.mean(imgray) > 127 or num_white_extreme < 50:
         thresh_white = 255 - thresh
     else:
         thresh_white = thresh

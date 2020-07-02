@@ -1,5 +1,6 @@
 import cv2
 import torch
+import random
 import pandas as pd
 from torch.autograd import Variable
 from Model.HOG_find_encode import hog_find_encode
@@ -68,7 +69,8 @@ if __name__ == "__main__":
     device = get_device()
     models = model_upload(device)
 
-    for num_img in range(df.shape[0]-1000, df.shape[0]):
+    for num_img in range(0, 1000):
+        num_img = random.randint(0, 1000) + df.shape[0] - 1000
         img_name = df.iloc[num_img, 0]
         folder_name = df.iloc[num_img, 1]
         img_path = '{}/{}/{}'.format(imgs_path, folder_name, img_name)
@@ -105,13 +107,19 @@ if __name__ == "__main__":
         c3_img = get_c3_img(img.copy(), c3.positions)
         c4_img = get_c4_img(img.copy(), c4.positions)
 
-        cv2.imshow('1', c1_img)
-        cv2.imshow('2', c2_img)
-        cv2.imshow('3', c3_img)
-        cv2.imshow('4', c4_img)
+        c_imgs = [c1_img, c2_img, c3_img, c4_img]
+        for i in range(1, 5):
+            cv2.namedWindow('{}'.format(i), 0)
+            cv2.resizeWindow('{}'.format(
+                i), (img.shape[1] // 1, img.shape[0] // 1))
+            cv2.moveWindow('{}'.format(i), 2000, 400*i)
+            cv2.imshow('{}'.format(i), c_imgs[i-1])
 
         for i in range(1, 5):
             cv2.destroyWindow('A_{}'.format(i))
+            # cv2.namedWindow('A_{}'.format(i), i+3)
+            # cv2.resizeWindow('A_{}'.format(
+            #     i), (img.shape[1]//2, img.shape[0]//2))
         ans_img(img_path, isShow=True)
 
         cv2.waitKey(0)

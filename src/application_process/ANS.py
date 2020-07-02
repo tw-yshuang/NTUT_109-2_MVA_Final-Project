@@ -126,6 +126,10 @@ def ans_img(img_path, isShow=False):
         total_contours_img.append(contours_img)
 
         if isShow is True:
+            cv2.namedWindow('A_{}'.format(folder_name), 0)
+            cv2.resizeWindow('A_{}'.format(
+                folder_name), (img.shape[1] // 1, img.shape[0] // 1))
+            cv2.moveWindow('A_{}'.format(folder_name), 300, 400*folder_name)
             cv2.imshow('A_{}'.format(folder_name), contours_img)
 
     return total_contours_img

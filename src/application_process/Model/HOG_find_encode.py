@@ -145,7 +145,7 @@ def hog_find_encode(img_path):
         crop_positions = []
         for raw_feature in raw_features:
             (x, y, w, h) = raw_feature[3]
-            if w > 5 and h > 5:
+            if w > 3 and h > 3:
                 features.append(raw_feature)
                 crop_positions.append(raw_feature[3])
 

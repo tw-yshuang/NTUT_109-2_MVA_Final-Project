@@ -16,7 +16,13 @@ def get_canny(img, isShow=True):
 def get_contours(img, isShow=True):
     imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(imgray, 92, 255, 0)
-    thresh_white = 255 - thresh
+    num_white_extreme = len(np.where(imgray > 200)[0])
+    num_black_extreme = len(np.where(imgray < 25)[0])
+
+    if np.mean(imgray) > 127 or num_white_extreme < 50:
+        thresh_white = 255 - thresh
+    else:
+        thresh_white = thresh
     _, contours, hierarchy = cv2.findContours(
         thresh_white, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     img_contours = cv2.drawContours(img.copy(), contours, -1, (0, 0, 255), -1)
