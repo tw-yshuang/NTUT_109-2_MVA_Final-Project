@@ -121,7 +121,6 @@ if __name__ == "__main__":
             # cv2.resizeWindow('A_{}'.format(
             #     i), (img.shape[1]//2, img.shape[0]//2))
         ans_img(img_path, isShow=True)
-
         cv2.waitKey(0)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
