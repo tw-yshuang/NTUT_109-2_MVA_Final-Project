@@ -8,4 +8,4 @@
 
 ## link:https://www.kaggle.com/c/severstal-steel-defect-detection
 
-### Click [**train_process**](./src/train_process/README.md) and [**application_process**](./src/application_process/README.md) to see the detialed discription.
+### Click [**train_process**](./src/train_process) and [**application_process**](./src/application_process) to see the detialed discription.
